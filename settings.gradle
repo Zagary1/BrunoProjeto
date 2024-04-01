@@ -22,4 +22,3 @@ dependencyResolutionManagement {
 rootProject.name = "BrunoProjeto"
 include ':app'
 include ':mylibraryGPSBruno'
-include ':calculosgpsandroid'

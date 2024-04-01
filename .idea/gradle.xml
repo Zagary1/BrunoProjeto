@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/calculosgpsandroid" />
             <option value="$PROJECT_DIR$/mylibraryGPSBruno" />
           </set>
         </option>
