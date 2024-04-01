@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         myMap = googleMap;
         myMap.getUiSettings().setZoomControlsEnabled(true);
         myMap.getUiSettings().setCompassEnabled(true);
-        myMap.getUiSettings().setZoomGesturesEnabled(true);
+        myMap.getUiSettings().setZoomGesturesEnabled(false);
         myMap.getUiSettings().setScrollGesturesEnabled(true);
 
         myMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
