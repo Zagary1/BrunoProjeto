@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "715327127025",
+    "project_id": "brunoprojeto-dd9fb",
+    "storage_bucket": "brunoprojeto-dd9fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715327127025:android:d57500ffb3b72673c69850",
+        "android_client_info": {
+          "package_name": "com.example.brunoprojeto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy3gIbkARyJWLJB7lbYmf-vPdi409pgLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
