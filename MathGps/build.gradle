@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    id 'maven-publish'
 }
+
 
 android {
     namespace 'com.example.mathgps'
@@ -20,10 +22,33 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
+
+publishing {
+    publications {
+        bar(MavenPublication){
+            groupId = "com.example"
+            artifactId = "mathgps"
+            version = "1.0"
+            artifact("$buildDir/outputs/aar/MathGps-release.aar")
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackagesRepository"
+            url = uri("https://maven.pkg.github.com/Zagary1/BrunoProjeto")
+                    credentials {
+                        username = project.findProperty("gpr.usr") ?: System.getenv("GPR_USER")
+                        password = project.findProperty("gpr.key") ?: System.getenv("GPR_API_KEY")
+                    }
+        }
+    }
+}
+
 
 dependencies {
 
@@ -33,13 +58,12 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.play.services.maps
-
     implementation libs.play.services.location
     implementation platform('com.google.firebase:firebase-bom:32.8.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.68'
-    implementation 'com.google.maps.android:android-maps-utils:2.3.1'
+    implementation 'com.google.maps.android:android-maps-utils:3.8.2'
     implementation 'com.google.maps.android:android-maps-utils:3.8.2'
 }

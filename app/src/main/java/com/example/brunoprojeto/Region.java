@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 
-        // MÉTODOS GETS //
+
 
         // Método getter para obter o nome da região
         public String getNome() {
@@ -59,7 +59,6 @@ import com.google.android.gms.maps.model.LatLng;
         }
 
 
-        // MÉTODOS SETS //
 
         // Método setter para atualizar o nome da região
         public void setNome(String name) {
@@ -90,7 +89,7 @@ import com.google.android.gms.maps.model.LatLng;
         }
 
         public double calculateDistance(LatLng newRegion) {
-            // Implementação específica para SubRegion
+
             return MathGps.calculateDistance(location.latitude, location.longitude, newRegion.latitude, newRegion.longitude);
         }
     }

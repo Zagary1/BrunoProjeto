@@ -4,81 +4,96 @@ import static com.example.mathgps.RegionManager.regionQueue;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Region extends RegionManager {
+public class Region {
+
+    protected String name;
+
+    protected double latitude;
+
+    protected double longitude;
+    protected int user;
+    protected long timestamp;
     protected LatLng location;
 
-    public Region(LatLng location) {
+    public Region() {
+    }
+
+    // Construtor da classe
+    public Region(String name, double latitude, double longitude, int usuario, long timestamp,LatLng location) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.user = usuario;
+        this.timestamp = timestamp;
         this.location = location;
     }
 
-    public LatLng getLocation() {
-        return location;
+
+
+    // MÉTODOS GETS //
+
+    // Método getter para obter o nome da região
+    public String getNome() {
+        return name;
     }
 
-    public void setLocation(LatLng location) {
-        this.location = location;
+    // Método getter para obter a latitude da região
+    public double getLatitude() {
+        return latitude;
+    }
+
+    // Método getter para obter a longitude da região
+    public double getLongitude() {
+        return longitude;
+    }
+
+    // Método getter para obter o número de usuário
+    public int getUsuario() {
+        return user;
+    }/////////////
+
+    // Método getter para obter o timeStamp
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public Region getRegiaoPrincipal() {
+        return null;
     }
 
 
-    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        // Converte as coordenadas de latitude e longitude para radianos
-        lat1 = Math.toRadians(lat1);
-        lon1 = Math.toRadians(lon1);
-        lat2 = Math.toRadians(lat2);
-        lon2 = Math.toRadians(lon2);
+    // MÉTODOS SETS //
 
-        // Distância entre latitudes e longitudes
-        double dLat = lat2 - lat1;
-        double dLon = lon2 - lon1;
-
-        // Aplica a fórmula de Haversine
-        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        // Raio da Terra em quilômetros
-        double R = 6371;
-
-        // Distância em quilômetros
-        return R * c;
+    // Método setter para atualizar o nome da região
+    public void setNome(String name) {
+        this.name = name;
     }
-    public static boolean isRegionWithin30Meters(LatLng newRegion) {
-        for (String encryptedRegion : regionQueue) {
-            try {
-                // Descriptografa os dados antes de comparar
-                String decryptedData = com.example.mathgps.Cryptography.decrypt(encryptedRegion);
-                LatLng existingRegion = com.example.mathgps.JsonUtil.fromJson(decryptedData, LatLng.class);
 
-                // Calcula a distância entre a nova região e uma região existente
-                double distance = MathGps.calculateDistance(newRegion.latitude, newRegion.longitude, existingRegion.latitude, existingRegion.longitude);
-
-                // Verifica se a distância é menor ou igual a 30 metros
-                if (distance <= 0.03) {
-                    return true; // Retorna true se a nova região estiver dentro de 30 metros de uma região existente
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false; // Retorna false se a nova região não estiver dentro de 30 metros de nenhuma região existente
+    // Método setter para atualizar a latitude da região
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
-    public static boolean isWithin5MetersOfAnyRegion(LatLng newRegion) {
-        for (String encryptedRegion : regionQueue) {
-            try {
-                // Descriptografa os dados antes de comparar
-                String decryptedData = Cryptography.decrypt(encryptedRegion);
-                LatLng existingRegion = JsonUtil.fromJson(decryptedData, LatLng.class);
 
-                // Calcula a distância entre a nova região e uma região existente
-                double distance = MathGps.calculateDistance(newRegion.latitude, newRegion.longitude, existingRegion.latitude, existingRegion.longitude);
+    // Método setter para atualizar a longitude da região
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
-                // Verifica se a distância é menor ou igual a 5 metros
-                if (distance <= 0.005) { // 0.005 km é aproximadamente 5 metros
-                    return true; // Retorna true se a nova região estiver dentro de 5 metros de uma região existente
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false; // Retorna false se a nova região não estiver dentro de 5 metros de nenhuma região existente
+    // Método setter para atualizar o numero de usuário
+    public void setUsuario(int usuario) {
+        this.user = usuario;
+    }
+
+    // Método setter para atualizar o timeStamp
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setRegiaoPrincipal(Region regiaoMaisProxima) {
+    }
+
+    public double calculateDistance(LatLng newRegion) {
+        // Implementação específica para SubRegion
+        return MathGps.calculateDistance(location.latitude, location.longitude, newRegion.latitude, newRegion.longitude);
     }
 }

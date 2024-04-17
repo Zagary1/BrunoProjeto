@@ -1,33 +1,19 @@
 package com.example.mathgps;
 
+import static com.example.mathgps.RegionManager.isRegionWithin30Meters;
+import static com.example.mathgps.RegionManager.isWithin5MetersOfAnyRegion;
+import static com.example.mathgps.RegionManager.regionQueue;
+
 import com.google.android.gms.maps.model.LatLng;
 
-public class RestrictedRegion extends RegionManager {
-    private LatLng mainRegion; // Supondo que LatLng represente a localização da região principal
+public class RestrictedRegion extends Region {
+    private Region mainRegion; // Supondo que LatLng represente a localização da região principal
     private boolean restricted;
 
-    public RestrictedRegion(LatLng mainRegion, boolean restricted) {
+    public RestrictedRegion(Region mainRegion, boolean restricted) {
         this.mainRegion = mainRegion;
         this.restricted = restricted;
     }
-
-    // Métodos específicos de RestrictedRegion
-    public LatLng getMainRegion() {
-        return mainRegion;
-    }
-
-    public void setMainRegion(LatLng mainRegion) {
-        this.mainRegion = mainRegion;
-    }
-
-    public boolean isRestricted() {
-        return restricted;
-    }
-
-    public void setRestricted(boolean restricted) {
-        this.restricted = restricted;
-    }
-
     public static void addRestrictedRegion(int user, LatLng newRegion) {
         Thread addRestrictedRegionThread = new Thread(() -> {
             try {
@@ -55,26 +41,10 @@ public class RestrictedRegion extends RegionManager {
         }
     }
 
-    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        // Converte as coordenadas de latitude e longitude para radianos
-        lat1 = Math.toRadians(lat1);
-        lon1 = Math.toRadians(lon1);
-        lat2 = Math.toRadians(lat2);
-        lon2 = Math.toRadians(lon2);
-
-        // Distância entre latitudes e longitudes
-        double dLat = lat2 - lat1;
-        double dLon = lon2 - lon1;
-
-        // Aplica a fórmula de Haversine
-        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        // Raio da Terra em quilômetros
-        double R = 6371;
-
-        // Distância em quilômetros
-        return R * c;
+    @Override
+    public double calculateDistance(LatLng newRegion) {
+        // Implementação específica para RestrictedRegion
+        return MathGps.calculateDistance(location.latitude, location.longitude, newRegion.latitude, newRegion.longitude);
     }
 }
 

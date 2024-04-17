@@ -23,6 +23,7 @@ public class RegionManager {
     private int user;
     private long timestamp;
 
+
     // Método para adicionar uma nova região à fila
     public void addNewRegion(int user, LatLng newRegion) {
         this.user = user; // Atualiza o código do usuário
