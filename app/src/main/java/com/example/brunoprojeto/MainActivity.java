@@ -1,5 +1,11 @@
 package com.example.brunoprojeto;
 
+import static com.example.brunoprojeto.RegionManager.regionQueue;
+
+
+import com.example.mathgps.Region;
+import com.example.mathgps.RegionManager;
+import com.example.mathgps.RestrictedRegion;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -18,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.example.mathgps.Cryptography;
 import com.example.mathgps.JsonUtil;
+import com.example.mathgps.RestrictedRegion;
+import com.example.mathgps.SubRegion;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,6 +45,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     // Código de permissão para acesso à localização
@@ -60,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Circle> circles = new ArrayList<>();
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 addNewRegion();
             }
         });
+
         // Botão para salvar regiões no banco de dados
         Button btnSaveToDatabase = findViewById(R.id.btnSaveToDatabase);
         btnSaveToDatabase.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 addRestrictedRegion();
+                RestrictedRegion restrictedRegion = new RestrictedRegion();
             }
         });
 
@@ -145,7 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+
     }
+
 
     // Método para obter a última localização do dispositivo
     private void getLastLocation() {
@@ -252,38 +267,46 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Método para adicionar uma nova região ao gerenciador de regiões
     private void addNewRegion() {
-        // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
-        LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
-        // Supondo que você tenha um código de usuário, por exemplo, userId
-        int userId = 1; // Substitua 1 pelo código do usuário real
-        regionManager.addNewRegion(userId, newRegion);
-        addCircleToMap(newRegion,30,Color.TRANSPARENT);
+        synchronized (regionQueue) {
+            // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
+            LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
+            // Supondo que você tenha um código de usuário, por exemplo, userId
+            int userId = 1; // Substitua 1 pelo código do usuário real
+            regionManager.addNewRegion(userId, newRegion);
+            addCircleToMap(newRegion, 30, Color.TRANSPARENT);
+
+        }
     }
 
     private void addSubRegion() {
-        // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
-        LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
-        // Supondo que você tenha um código de usuário, por exemplo, userId
-        int userId = 1; // Substitua 1 pelo código do usuário real
-        SubRegion.addSubRegion(userId,newRegion);
+        synchronized (regionQueue) {
+            // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
+            LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
+            // Supondo que você tenha um código de usuário, por exemplo, userId
+            int userId = 1; // Substitua 1 pelo código do usuário real
+            SubRegion.addSubRegion(userId, newRegion);
 
-        addCircleToMap(newRegion,5,Color.CYAN);
+            addCircleToMap(newRegion, 5, Color.CYAN);
+        }
     }
 
     private void addRestrictedRegion() {
-        // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
-        LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
-        // Supondo que você tenha um código de usuário, por exemplo, userId
-        int userId = 1; // Substitua 1 pelo código do usuário real
-        RestrictedRegion.addRestrictedRegion(userId,newRegion);
+        synchronized (regionQueue) {
+            // Supondo que você tenha as coordenadas da nova região em markerLatitude e markerLongitude
+            LatLng newRegion = new LatLng(markerLatitude, markerLongitude);
+            // Supondo que você tenha um código de usuário, por exemplo, userId
+            int userId = 1; // Substitua 1 pelo código do usuário real
+            RestrictedRegion.addRestrictedRegion(userId, newRegion);
+            addCircleToMap(newRegion, 5, Color.MAGENTA);
 
-        addCircleToMap(newRegion,5,Color.MAGENTA);
+        }
     }
+
 
 
 
     // Método para salvar regiões no banco de dados Firestore
-    private void saveRegionsToDatabase() {
+    private synchronized void saveRegionsToDatabase() {
         new Thread(() -> {
             for (String encryptedRegion : regionManager.getRegionQueue()) {
                 try {

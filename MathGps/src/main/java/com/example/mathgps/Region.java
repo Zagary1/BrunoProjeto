@@ -1,6 +1,5 @@
 package com.example.mathgps;
 
-import static com.example.mathgps.RegionManager.regionQueue;
 
 import com.google.android.gms.maps.model.LatLng;
 

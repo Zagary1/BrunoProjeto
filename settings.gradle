@@ -9,13 +9,23 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+
     }
 }
+
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven{
+            url = "https://maven.pkg.github.com/Zagary1/BrunoProjeto"
+            credentials{
+                username = "Zagary1"
+                password = "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"
+            }
+        }
     }
 }
 

@@ -3,8 +3,10 @@ package com.example.mathgps;
 import static com.example.mathgps.RegionManager.isRegionWithin30Meters;
 import static com.example.mathgps.RegionManager.isWithin5MetersOfAnyRegion;
 import static com.example.mathgps.RegionManager.regionQueue;
-
 import com.google.android.gms.maps.model.LatLng;
+import com.example.mathgps.Cryptography;
+import com.example.mathgps.JsonUtil;
+import com.example.mathgps.MathGps;
 
 public class SubRegion extends Region{
     private Region mainRegion; // LatLng representa a localização da região principal
@@ -14,31 +16,33 @@ public class SubRegion extends Region{
         this.mainRegion = mainRegion;
     }
 
-    public static void addSubRegion(int user, LatLng newRegion) {
-        Thread addSubRegionThread = new Thread(() -> {
-            try {
-                if (isRegionWithin30Meters(newRegion)) {
-                    if (!isWithin5MetersOfAnyRegion(newRegion)) {
-                        String jsonData = JsonUtil.toJson(newRegion);
-                        String encryptedData = Cryptography.encrypt(jsonData);
-                        regionQueue.add(encryptedData);
-                        System.out.println("Sub Região adicionada: " + newRegion.latitude + ", " + newRegion.longitude);
+    public synchronized static void addSubRegion(int user, LatLng newRegion) {
+
+            Thread addSubRegionThread = new Thread(() -> {
+                try {
+                    if (isRegionWithin30Meters(newRegion)) {
+                        if (!isWithin5MetersOfAnyRegion(newRegion)) {
+                            String jsonData = JsonUtil.toJson(newRegion);
+                            String encryptedData = Cryptography.encrypt(jsonData);
+                            regionQueue.add(encryptedData);
+                            System.out.println("Sub Região adicionada: " + newRegion.latitude + ", " + newRegion.longitude);
+                        } else {
+                            System.out.println("Não é possível adicionar SubRegion. Está muito próximo de uma RestrictedRegion/subRegion.");
+                        }
                     } else {
-                        System.out.println("Não é possível adicionar SubRegion. Está muito próximo de uma RestrictedRegion/subRegion.");
+                        System.out.println("Não é possível adicionar SubRegion. Não está dentro de um raio de 30 metros de uma região existente.");
                     }
-                } else {
-                    System.out.println("Não é possível adicionar SubRegion. Não está dentro de um raio de 30 metros de uma região existente.");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
+            });
+            addSubRegionThread.start();
+            try {
+                addSubRegionThread.join();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        });
-        addSubRegionThread.start();
-        try {
-            addSubRegionThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
 

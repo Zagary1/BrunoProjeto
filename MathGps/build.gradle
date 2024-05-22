@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.android'
 }
 
 
@@ -35,23 +36,25 @@ publishing {
             version = "1.0"
             artifact("$buildDir/outputs/aar/MathGps-release.aar")
         }
+
     }
 
     repositories {
         maven {
-            name = "GitHubPackagesRepository"
-            url = uri("https://maven.pkg.github.com/Zagary1/BrunoProjeto")
+            name  "GitHubPackages"
+            url  uri("https://maven.pkg.github.com/Zagary1/BrunoProjeto")
                     credentials {
                         username = project.findProperty("gpr.usr") ?: System.getenv("GPR_USER")
                         password = project.findProperty("gpr.key") ?: System.getenv("GPR_API_KEY")
                     }
         }
     }
+
 }
 
 
 dependencies {
-
+    implementation "com.example:mathgps:1.0"
     implementation libs.appcompat
     implementation libs.material
     testImplementation libs.junit
@@ -66,4 +69,5 @@ dependencies {
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.68'
     implementation 'com.google.maps.android:android-maps-utils:3.8.2'
     implementation 'com.google.maps.android:android-maps-utils:3.8.2'
+
 }
